@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const registerRouter = require('./routes/registerRoutes'); // Adjust the path as necessary
+const registerRouter = require('./routes/registerRoutes');
+const loginRouter = require('./routes/loginRoutes');  // Adjust the path as necessary
 
 const app = express();
 const PORT = 5000;
@@ -30,6 +31,7 @@ mongoose.connect(mongoURI, {
 
 // Use the registration router
 app.use('/api', registerRouter);
+app.use('/api', loginRouter );
 
 // Start server
 app.listen(PORT, () => {

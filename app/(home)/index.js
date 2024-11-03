@@ -1,14 +1,32 @@
-import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native';
-import React from 'react';
+import { View, Text, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
+import axios from 'axios'; // Ensure axios is imported
 
-const Index = () => {  
-    const router = useRouter(); 
+const Login = () => {
+    const router = useRouter();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleNavigate = () => {
-        router.push('./register'); // Push to the register screen
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post('http://10.141.221.60:5000/api/login', { email, password });
+            if (response.status === 200) {
+                const { token } = response.data;
+                console.log('Login successful:', token);
+                Alert.alert('Login Successful');
+                router.push('/(home)/register'); // Navigate to the register screen
+            }
+        } catch (error) {
+            if (error.response) {
+                console.error('Login error:', error.response.data);
+                Alert.alert('Login Failed', error.response.data.message || 'An error occurred');
+            } else {
+                console.error('Login error:', error.message);
+                Alert.alert('Login Failed', 'An error occurred');
+            }
+        }
     };
-
     return (
         <View style={{ borderColor: 'blue', borderWidth: 2, margin: 40, width: 320, height: 400 }}>
             <View>
@@ -19,7 +37,7 @@ const Index = () => {
                     alignItems: 'center',
                     marginTop: 50,
                     fontSize: 30,
-                    fontWeight: 'bold' // Changed to 'bold' for proper weight
+                    fontWeight: 'bold'
                 }}>
                     Login
                 </Text>
@@ -38,7 +56,9 @@ const Index = () => {
                         marginTop: 30,
                     }}
                     placeholder="Email"
-                    keyboardType="email-address" // Added for better user experience
+                    keyboardType="email-address"
+                    value={email} // Bind the value to state
+                    onChangeText={setEmail} // Update state on text change
                 />
 
                 <TextInput
@@ -53,27 +73,26 @@ const Index = () => {
                         marginTop: 30,
                     }}
                     placeholder="Password"
-                    secureTextEntry // Added to hide password input
+                    secureTextEntry
+                    value={password} // Bind the value to state
+                    onChangeText={setPassword} // Update state on text change
                 />
             </View>
 
             <View>
-                <TouchableOpacity onPress={handleNavigate}>
+                <TouchableOpacity onPress={() => router.push('/(home)/register')}>
                     <Text style={{ color: 'blue', marginTop: 20 }}>Create account?</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={{ marginTop: 20 }}> 
+            <View style={{ marginTop: 20 }}>
                 <Button
                     title="Login"
-                    onPress={() => {
-                        // Handle login action here
-                        console.log('Login pressed');
-                    }}
+                    onPress={handleLogin} // Call handleLogin on button press
                 />
             </View>
         </View>
     );
 };
 
-export default Index; 
+export default Login;
