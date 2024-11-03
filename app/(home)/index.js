@@ -85,10 +85,18 @@ const Login = () => {
                 </TouchableOpacity>
             </View>
 
+
+            <View>
+                <TouchableOpacity onPress={() => router.push('/(home)/fetch')}>
+                    <Text style={{ color: 'blue', marginTop: 20 }}>list of user</Text>
+                </TouchableOpacity>
+            </View>
+
+
             <View style={{ marginTop: 20 }}>
                 <Button
                     title="Login"
-                    onPress={handleLogin} // Call handleLogin on button press
+                    onPress={() => router.push("/(home)/fetch")}// Call handleLogin on button press
                 />
             </View>
         </View>
